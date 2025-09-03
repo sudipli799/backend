@@ -595,10 +595,10 @@ const getHome = async (req, res) => {
     const filteredStatuses = statusList.filter(Boolean);
 
     // 2. 10 LATEST POSTS
-    const recentPosts = await Post.find({ post_type: 'post' })
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
+    const recentPosts = await Post.find({ post_type: { $in: ['post', 'reel'] } })
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .lean();
 
     const postsWithUser = await Promise.all(
       recentPosts.map(async (post) => {
@@ -657,7 +657,7 @@ const getHome = async (req, res) => {
     );
 
     // 6. More posts
-    const morePosts = await Post.find({ post_type: 'post' })
+    const morePosts = await Post.find({ post_type: { $in: ['post', 'reel'] } })
       .sort({ createdAt: -1 })
       .skip(1)
       .limit(10)
@@ -676,7 +676,7 @@ const getHome = async (req, res) => {
 
     
     // 8. Final batch of 10 posts
-    const finalPosts = await Post.find({ post_type: 'post' })
+    const finalPosts = await Post.find({ post_type: { $in: ['post', 'reel'] } })
       .sort({ createdAt: -1 })
       .skip(1)
       .limit(10)
